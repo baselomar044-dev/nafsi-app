@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نفسي - Nafsi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #060709;
+            --bg-card: #111418;
+            --accent-blue: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at center, #0a0f1a 0%, #060709 100%);
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.02;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.01; transform: scale(1); }
+            50% { opacity: 0.04; transform: scale(1.1); }
+        }
+
+        .handwriting { font-family: 'Caveat', cursive; }
+        .tyler-input {
+            background-color: rgba(17, 20, 24, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+        }
+        .chat-bubble-user {
+            background-color: #1d4ed8;
+            color: white;
+            border-radius: 1.5rem 1.5rem 0 1.5rem;
+        }
+        .chat-bubble-ai {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 1.5rem 1.5rem 1.5rem 0;
+        }
+        
+        @keyframes brain-pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); opacity: 0.6; }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.4)); opacity: 1; }
+            100% { transform: scale(1); filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); opacity: 0.6; }
+        }
+        .animate-thinking { animation: brain-pulse 2.5s infinite ease-in-out; }
+
+        @keyframes floating-bubble {
+            0% { transform: translateY(0) scale(1); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-40px) scale(1.5); opacity: 0; }
+        }
+        .bubble {
+            position: absolute;
+            background: rgba(59, 130, 246, 0.4);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: floating-bubble 2s infinite ease-in;
+        }
+
+        @keyframes wave {
+            0%, 100% { height: 4px; }
+            50% { height: 16px; }
+        }
+        .wave-bar {
+            width: 3px;
+            background: #ef4444;
+            border-radius: 2px;
+            animation: wave 1s infinite ease-in-out;
+        }
+
+        @keyframes wave-think {
+            0%, 100% { height: 30%; opacity: 0.4; }
+            50% { height: 100%; opacity: 1; }
+        }
+        .animate-wave { animation: wave-think 1s infinite ease-in-out; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
+        .glass-sidebar { background: rgba(6, 7, 9, 0.92); backdrop-filter: blur(50px); }
+        main { z-index: 10; position: relative; }
+        .tag-pill {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        .report-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+    </style>
+
+<link rel="stylesheet" href="/index.css">
+<script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^1.40.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/nafsi-app/assets/index-DMAGmbF3.js"></script>
+</head>
+<body>
+    <div class="stars-container" id="stars"></div>
+    <div id="root"></div>
+    <script>
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 1.5 + 0.5;
+            star.style.width = `${size}px`;
+            star.style.height = `${size}px`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.setProperty('--duration', `${Math.random() * 6 + 4}s`);
+            starsContainer.appendChild(star);
+        }
+    </script>
+</body>
+</html>
